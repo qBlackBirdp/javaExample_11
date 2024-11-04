@@ -1,35 +1,27 @@
 package com.hys.exam;
 
 public class Todo {
-    private int id;
-    private String body;
+    private long id;
+    private String content;
 
-    public Todo(int id, String body) {
-        this.id = id;
-        this.body = body;
+    public String getContent() {
+        return content;
     }
 
-    @Override
-    public String toString() {
-        return "ToDo{" +
-                "id=" + id +
-                ", body='" + body + '\'' +
-                '}';
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
+    public Todo(long id, String content) {
+        this.id = id;
+        this.content = content;
     }
 }

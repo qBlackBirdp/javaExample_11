@@ -1,54 +1,35 @@
 package com.hys.exam;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-import static com.hys.exam.TodoController.*;
-
 public class App {
-    static Scanner sc;
-    static int lastId;
-    static List<Todo> toDos;
+    private Scanner sc;
+    private TodoController todoController;
+    private SystemController systemController;
 
     public App() {
         sc = new Scanner(System.in);
-        lastId = 1;
-        toDos = new ArrayList<>();
+        todoController = new TodoController();
+        systemController = new SystemController();
     }
 
-    public static void run() {
-        System.out.println("== todo 앱 실행 ==");
-
+    public void run() {
         while (true) {
-            System.out.print("명령어 ) ");
+            System.out.print("명령) ");
             String cmd = sc.nextLine().trim();
-
-            if (cmd.equals("종료")) {
-                System.out.println("== todo 앱 종료 ==");
-                return;
-            } else if (cmd.isEmpty()) System.out.println("명령어 똑바로 입력해.");
-
-            switch (cmd) {
-                case "add":
-                    doWrite();
-                    break;
-                case "list":
-                    showList();
-                    break;
-
-                default:
-                    if (cmd.startsWith("del")) {
-                        System.out.print("삭제할 할일의 번호: ");
-                        int id = Integer.parseInt(sc.nextLine().trim());
-                        doDelete(id);
-                    } else if (cmd.startsWith("modify")) {
-                        System.out.print("수정할 할일의 번호: ");
-                        int id = Integer.parseInt(sc.nextLine().trim());
-                        doModify(id);
-                    } else System.out.println("명령어 오류");
-                    break;
+            if (cmd.equals("exit")) {
+                systemController.exit();
+                break;
+            } else if (cmd.equals("add")) {
+                todoController.add();
+            } else if (cmd.equals("list")) {
+                todoController.list();
+            } else if (cmd.equals("del")) {
+                todoController.del();
+            } else if (cmd.equals("modify")) {
+                todoController.modify();
             }
         }
+        sc.close();
     }
 }

@@ -1,61 +1,69 @@
 package com.hys.exam;
 
-import static com.hys.exam.App.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class TodoController {
 
-    static void doModify(int id) {
-        Todo found = foundTodoId(id);
-        if (found == null) {
+    private Scanner sc;
+    private ArrayList<Todo> todos;
+    private long todosLastId;
+
+    public TodoController() {
+        sc = new Scanner(System.in);
+        todos = new ArrayList<>();
+        todosLastId = 0;
+    }
+
+    public void add() {
+        long id = todosLastId + 1;
+        System.out.print("할 일 : ");
+        String content = sc.nextLine().trim();
+
+        Todo todo = new Todo(id, content);
+        todos.add(todo);
+        todosLastId++;
+
+        System.out.printf("%d번 todo가 생성되었습니다\n", id);
+    }
+
+    public void list() {
+        System.out.println("번호   /   내용  ");
+
+        todos.forEach(todo -> System.out.printf("%d  /  %s  \n", todo.getId(), todo.getContent()));
+    }
+
+    public void del() {
+        System.out.printf("삭제할 할일의 번호 : ");
+        long id = Long.parseLong(sc.nextLine().trim());
+
+        boolean isRemoved = todos.removeIf(todo -> todo.getId() == id);
+
+        if (!isRemoved) {
             System.out.printf("%d번 할일은 존재하지 않습니다.\n", id);
-        } else {
-            System.out.println("할일(기존) : " + found.getBody());
-            System.out.print("할일 : ");
-            String newBody = sc.nextLine().trim();
-
-            found.setBody(newBody);
+            return;
         }
+        System.out.printf("%d번 할일이 삭제되었습니다.\n", id);
     }
 
-    static void doDelete(int id) {
-        Todo found = foundTodoId(id);
-        if (found == null) {
+    public void modify() {
+        System.out.printf("수정할 할일의 번호 : ");
+        long id = Long.parseLong(sc.nextLine().trim());
+
+        Todo foundTodo = todos.stream()
+                .filter(t -> t.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (foundTodo == null) {
             System.out.printf("%d번 할일은 존재하지 않습니다.\n", id);
-        } else {
-            toDos.remove(found);
-            System.out.printf("%d번 할일이 삭제되었습니다.\n", id);
+            return;
         }
-    }
 
-    private static Todo foundTodoId(int id) {
-        for (Todo todo : toDos) {
-            if (todo.getId() == id) {
-                return todo;
-            }
-        }
-        return null;
-    }
+        System.out.printf("기존 할일 : %s\n", foundTodo.getContent());
+        System.out.print("새 할일 : ");
+        foundTodo.setContent(sc.nextLine().trim());
 
-    static void showList() {
-        if (toDos.isEmpty()) {
-            System.out.println("할일 없음.");
-        } else {
-            System.out.println("번호      /       명언");
-            System.out.println("=".repeat(45));
-            for (int i = toDos.size() - 1; i >= 0; i--) {
-                Todo todo = toDos.get(i);
-                System.out.printf("%d       /       %s\n", todo.getId(), todo.getBody());
-            }
-        }
-    }
-
-    static void doWrite() {
-        System.out.print("할일 ) ");
-        String body = sc.nextLine().trim();
-
-        int id = lastId++;
-
-        toDos.add(new Todo(id, body));
-        System.out.printf("%d번 할일이 등록되었습니다.\n", id);
+        System.out.printf("%d번 할일이 수정되었습니다.\n", id);
     }
 }
